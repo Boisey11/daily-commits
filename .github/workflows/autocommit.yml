@@ -2,31 +2,25 @@ name: Daily Commit (Midnight ET)
 
 on:
   schedule:
-    - cron: "0 * * * *"   # Runs every hour
+    # Runs at 5:00 UTC → midnight ET during standard time, 1 AM ET during daylight savings
+    - cron: "0 5 * * *"  
   workflow_dispatch:      # Manual trigger allowed
 
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: true
 
-      - name: Commit only at midnight ET
+      - name: Append timestamp and commit
         run: |
-          # Get current hour in US/Eastern timezone
-          HOUR_ET=$(TZ="America/New_York" date +'%H')
-          
-          # Only continue if it's midnight ET
-          if [ "$HOUR_ET" -eq "00" ]; then
-            echo "Last run: $(date)" >> log.txt
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git add log.txt
-            git commit -m "chore: add daily timestamp" || echo "No changes to commit"
-            git push
-          else
-            echo "Not midnight ET yet. Skipping commit."
-          fi
+          echo "Last run: $(date)" >> log.txt
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add log.txt
+          git commit -m "chore: add daily timestamp" || echo "No changes to commit"
+          git push
