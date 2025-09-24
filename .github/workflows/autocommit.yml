@@ -19,8 +19,8 @@ jobs:
       - name: Append timestamp and commit
         run: |
           echo "Last run: $(date)" >> log.txt
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "Daniel Kao"
+          git config --global user.email "danielk3922@gmail.com"
           git add log.txt
           git commit -m "chore: add daily timestamp" || echo "No changes to commit"
           git push
